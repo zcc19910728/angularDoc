@@ -10,5 +10,7 @@ var app = angular.module('app', [
     'promptModule',
     'china-area-selector',
     'ngDialog',
+    'cz-message',
+    'datetimepicker'
 ]);
 

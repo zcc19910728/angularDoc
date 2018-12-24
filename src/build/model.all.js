@@ -874,6 +874,158 @@ angular.module('__chinaAreaSelectorTemplates__', []).run(['$templateCache', func
         `);
 }]);
 /**
+ * Created by chenmingkang on 16/3/1.
+ */
+;(function(){
+    'use strict';
+    angular.module('cz-message',[]).factory('messageFactory',['$rootScope','$timeout','$compile', function($rootScope,$timeout,$compile) {
+        var time = time || undefined;
+        var scope = $rootScope.$new();
+
+        return function(o){
+            $timeout(function(){
+                var option = {
+                    time : 3000,
+                    text:''
+                };
+                angular.extend(option,o);
+                var elm = (function(){
+                    return document.getElementById('messageTop');
+                }());
+                scope.messageText = option.text;
+
+                if(!elm){
+                    // angular.element(document.body).append(html);
+                    var html = '<div class="message-top" id="messageTop" ng-show="messageText">' +
+                        '<div class="message-main-lay">'+
+                        '<div class="message-main">'+
+                        '<div class="message-text cor-red">{{messageText}}</div>'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>';
+                    angular.element(document.body).append($compile(html)(scope));
+                }
+
+                $timeout.cancel(time);
+                time = $timeout(function(){
+                    elm = null;
+                    scope.messageText = '';
+                },option.time);
+            },0);
+        };
+    }]);
+}());
+
+/**
+ * Created by  on 2016/4/22.
+ */
+;(function(angular){
+    var datetimepicker = angular.module('datetimepicker',[])
+        .factory('timepickerFactory',function() {
+            function extendInit(attrs,o){
+                var opt = {
+                    format        : 'Y-m-d' || attrs.format,
+                    minDate       : '' || attrs.minDate,
+                    maxDate       : '' || attrs.maxDate,
+                    timepicker    : false,
+                    // timeHeightInTimePicker:11,
+                    onShowCallback : function(){
+
+                    }
+                };
+                angular.extend(opt,o || {});
+                return opt;
+            }
+
+            function setDate(setDay, format){
+                var date = new Date();
+                var time = date.getTime();
+                var dayTime = 60 * 1000 * 60 * 24 * Math.abs(setDay);
+                var newDate;
+
+                function fliterDate(data, format){
+
+                    // keep the origin formart
+                    if (format === 'Y-m-d H:i:s') {
+                        data = data.match(/^(.+)T.*$/)[1] + ' 00:00:00';
+                        return data;
+                    }
+
+                    return data.match(/^(.+)T.*$/)[1];
+                }
+
+                if(setDay.indexOf('-') > -1){
+                    newDate = new Date(time - Math.abs(dayTime));
+                }else{
+                    newDate = new Date(time + dayTime);
+                }
+
+                return {
+                    newData : fliterDate(newDate.toISOString(), format),
+                    date    : fliterDate(new Date().toISOString(), format)
+                };
+            }
+
+            return {
+                extendInit : extendInit,
+                setDate    : setDate
+            };
+        }).directive('timepicker',["timepickerFactory","$timeout",function(timepickerFactory,$timeout) {
+            return {
+                restrict: 'EA',
+                scope:{
+                    minDate  : '=' ,
+                    maxDate  : '=',
+                    datetimepickerOpt : '='
+                },
+                link : function(scope, elm, attrs) {
+                    $timeout(function(){
+                        var datetimepickerEndOpt = scope.datetimepickerOpt || {};
+                        var opt = timepickerFactory.extendInit(attrs,datetimepickerEndOpt);
+                        opt.onShow = function( ct ){
+                            this.setOptions({
+                                minDate : scope.minDate || false,
+                                maxDate : scope.maxDate || false
+                            });
+                            opt.onShowCallback.apply(this,arguments);
+                        };
+                        $.datetimepicker.setLocale('zh');
+                        elm.datetimepicker(opt);
+                    },0);
+                }
+            }
+        }]).directive('timepickerSetData',["timepickerFactory","$timeout",function(timepickerFactory,$timeout) {
+            return {
+                restrict: 'EA',
+                scope : {
+                    date : '='
+                },
+                link : function(scope, elm, attrs) {
+                    $timeout(function(){
+                        elm.on('click',function(){
+                            scope.$apply(function(){
+
+                                var date = timepickerFactory.setDate(attrs.timepickerSetData, attrs.format);
+                                if(scope.date){
+                                    scope.date[attrs.startDate] = date.newData;
+                                    scope.date[attrs.endDate] = date.date;
+                                }else{
+                                    scope.$parent[attrs.startDate] = date.newData;
+                                    scope.$parent[attrs.endDate] = date.date;
+                                }
+
+                            });
+                        });
+                    },0);
+                }
+            }
+        }]);
+
+
+})(angular);
+
+
+/**
  * 使用范例:
  *
  *     @example
@@ -912,38 +1064,6 @@ angular.module('iconTitleModule', [])
         };
     });
 
-/**
- * 使用范例:
- *
- *     @example
- *     <span prompt icon="&#xe66d;">只能选择出售中的商品、每个商品只能选择1个规格，每个巨划算最多选择200个商品</span>
- *
- * 样式展现：
- * {@img prompt.jpg alt text}
- * @class promptModule
- */
-angular.module('promptModule', [])
-    .directive('prompt',
-    /**
-     * @member promptModule
-     * @method prompt 标签指令，EA模式
-     * @param {String} icon 所需icon值
-     */
-    function () {
-        return {
-            restrict: 'AE',
-            template: '<div class="height-36 bg-o">'+
-            '<span class="iconfont cur-p hint" style="margin-left:16px; color:#FFBF00;font-size: 14px; vertical-align: bottom;">{{icon}}</span>'+
-            '<span class="d-ib ml-10" style="color: #444" ng-transclude></span>'+
-            '</div>',
-            //replace: true,
-            transclude: true,
-            scope: {
-                icon: '@',
-                cor: '@'
-            }
-        };
-    });
 /*
  * ngDialog - easy modals and popup windows
  * http://github.com/likeastore/ngDialog
@@ -1899,6 +2019,38 @@ angular.module('promptModule', [])
     return m;
 }));
 
+/**
+ * 使用范例:
+ *
+ *     @example
+ *     <span prompt icon="&#xe66d;">只能选择出售中的商品、每个商品只能选择1个规格，每个巨划算最多选择200个商品</span>
+ *
+ * 样式展现：
+ * {@img prompt.jpg alt text}
+ * @class promptModule
+ */
+angular.module('promptModule', [])
+    .directive('prompt',
+    /**
+     * @member promptModule
+     * @method prompt 标签指令，EA模式
+     * @param {String} icon 所需icon值
+     */
+    function () {
+        return {
+            restrict: 'AE',
+            template: '<div class="height-36 bg-o">'+
+            '<span class="iconfont cur-p hint" style="margin-left:16px; color:#FFBF00;font-size: 14px; vertical-align: bottom;">{{icon}}</span>'+
+            '<span class="d-ib ml-10" style="color: #444" ng-transclude></span>'+
+            '</div>',
+            //replace: true,
+            transclude: true,
+            scope: {
+                icon: '@',
+                cor: '@'
+            }
+        };
+    });
 /**
  * 使用范例:
  *

@@ -1,0 +1,100 @@
+.img-layer .icon-overlay {
+    display: none;
+}
+
+.img-layer:hover .icon-overlay {
+    display: block;
+}
+
+.img-layer-wrapper {
+    margin: 0;
+    padding-left: 0;
+    min-height: 100px;
+}
+
+.img-layer {
+    float: left;
+    overflow: hidden;
+    zoom: 1;
+
+    position: relative;
+
+    margin: 10px;
+    border: 1px solid #eee;
+    width: 100px;
+    height: 100px;
+
+    line-height: 100px;
+    text-align: center;
+}
+
+.btn-addPic {
+    display: inline-block;
+    overflow: hidden;
+
+    position: relative;
+
+    margin-top: 10px;
+    width: 104px;
+    height: 104px;
+
+    text-align: center;
+
+    color: #999;
+    background: #fff url("data:img/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAAGYAAABmCAYAAAA53+RiAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXtJREFUeNrs3L1twkAAgNFL5AEYwRvg1p03waXLbBJKl7AJFW7JBh6BEXKWDokqxI4iH+h90mEoXHAPn9Dx83Y+n8sQQhuUU4ci3kww1zgu5iOLpoukLNKDS13XJ3OyfsMwNNPx3VTkGRgwAgNGYMAIjMCAERgwAiMwYAQGjMCAERiBASMwYARGYMAIDBiBASMwAvPMFa/yRPq+P8RDFUfTdd3VFZMHShMPuzi2cXxYygQGjMAIDBiBASMwAgNGC8puE7Pv+02Yv99V3t9Pe2e/ruu6E5jHTZO0/cP5uzTmvBiOEae1lP3cGv80WLliHi8rbfpsZe7Efqb7x4S7mXH+Hsw/rPkR8v7hGM/fhyfPuzIwAgNGYMAIjMCAERgwArOktLc2bV5+hQw3JJf0Mt/2z+3zFFeMpUxgBAaMwIARGDACIzBgBAaMwAgMGIEBIzBgBEZgwAgMGIERGDACA0ZgwCi7br8oq4ZhMBt5VN5gxjiaNLR+k8f4LcAAaus5TTLpVsQAAAAASUVORK5CYII=") 0 0 no-repeat;
+
+    cursor: pointer;
+}
+
+.filePrew {
+    display: block;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 102px;
+    height: 102px;
+
+    font-size: 100px;
+
+    opacity: 0;
+
+    cursor: pointer;
+
+    filter: alpha(opacity=0);
+}
+
+.img-show {
+    max-width: 100px;
+    max-height: 100px;
+}
+.icon-overlay {
+    background: #fff;
+
+         opacity: .7;
+
+    -khtml-opacity: .7;
+    filter: alpha(opacity=70);
+    -moz-opacity: .7;
+}
+.img-layer.cornor > .icon-overlay {
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    z-index: 100;
+
+    border-bottom-left-radius: 4px;
+    width: 25px;
+    height: 25px;
+
+    line-height: 25px;
+}
+.img-layer > .icon-overlay > i {
+    font-size: 20px;
+    line-height: 100px;
+}
+.img-layer.cornor > .icon-overlay > i {
+    line-height: 25px;
+}
